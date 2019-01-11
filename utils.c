@@ -1,4 +1,14 @@
 #include "utils.h"
+#include <errno.h>
+#include <string.h>
+#include <stdarg.h>
+
+void perrorf(const char *fmt, ...) {
+	va_list args;
+	va_start(args, fmt);
+	vfprintf(stderr, fmt, args);
+	eprintf(": %s\n", strerror(errno));
+}
 
 void print_usage(const char *argv0) {
 	eprintf("Usage:\n");

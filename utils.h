@@ -6,6 +6,7 @@
 #include <stdio.h>
 #define eprintf(...) fprintf(stderr, __VA_ARGS__)
 
+void perrorf(const char *fmt, ...);
 extern const char *usage[];
 void print_usage(const char *argv0);
 char *strrxchr(const char *s, int c);
