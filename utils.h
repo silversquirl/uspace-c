@@ -6,12 +6,8 @@
 
 #define _POSIX_C_SOURCE 200809L
 
-const char *usage[];
-static void print_usage(const char *argv0) {
-	eprintf("Usage:\n");
-	for (const char **p = usage; *p; p++) {
-		eprintf("  %s %s\n", argv0, *p);
-	}
-}
+extern const char *usage[];
+void print_usage(const char *argv0);
+char *strrxchr(const char *s, int c);
 
 #endif
