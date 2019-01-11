@@ -98,6 +98,7 @@ int main(int argc, char *argv[]) {
 			break;
 
 		case '?':
+		default:
 			print_usage(*argv);
 			return 1;
 		}
