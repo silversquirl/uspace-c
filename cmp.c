@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <stdbool.h>
+#include <string.h>
 #include <unistd.h>
 
 const char *usage[] = {
@@ -16,11 +17,21 @@ struct cmp_options {
 //#define error(...) return opt.silent || (perrorf(__VA_ARGS__), 0), 2
 
 static int do_cmp(const char *file1, const char *file2) {
-	FILE *f1 = fopen(file1, "rb");
-	if (!f1) error("fopen: %s", file1);
+	FILE *f1;
+	if (!strcmp(file1, "-")) {
+		f1 = stdin;
+	} else {
+		f1 = fopen(file1, "rb");
+		if (!f1) error("fopen: %s", file1);
+	}
 
-	FILE *f2 = fopen(file2, "rb");
-	if (!f2) error("fopen: %s", file2);
+	FILE *f2;
+	if (!strcmp(file1, "-")) {
+		f2 = stdin;
+	} else {
+		f2 = fopen(file2, "rb");
+		if (!f2) error("fopen: %s", file2);
+	}
 
 	size_t byten = 0, linen = 1;
 	bool identical = true;
