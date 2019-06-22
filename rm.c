@@ -2,6 +2,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <stdbool.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <limits.h>
@@ -52,7 +53,7 @@ static int do_rm(const char *fn) {
 	}
 
 	// Step 2 in POSIX spec
-	if (st.st_mode & S_IFDIR) {
+	if (S_ISDIR(st.st_mode)) {
 		if (!opt.recurse) return eprintf("%s/%s: is a directory. Try using -r\n", cwd, fn), 1;
 
 		DIR *dp = opendir(fn);

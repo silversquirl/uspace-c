@@ -9,6 +9,8 @@
 void perrorf(const char *fmt, ...);
 extern const char *usage[];
 void print_usage(const char *argv0);
+
+// Finds the last character that is not c
 char *strrxchr(const char *s, int c);
 
 #endif
