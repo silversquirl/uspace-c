@@ -20,7 +20,7 @@ void print_usage(const char *argv0) {
 char *strrxchr(const char *s, int c) {
 	const char *ret = NULL;
 	while (*s) {
-		if ((unsigned char)*s != c) ret = s;
+		if (*s != (char)c) ret = s;
 		s++;
 	}
 	return (char *)ret;
