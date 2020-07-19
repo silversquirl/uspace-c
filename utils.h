@@ -1,8 +1,6 @@
 #ifndef _USPACE_UTILS_H
 #define _USPACE_UTILS_H
 
-#define _POSIX_C_SOURCE 200809L
-
 #include <stdio.h>
 #define eprintf(...) fprintf(stderr, __VA_ARGS__)
 

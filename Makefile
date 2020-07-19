@@ -1,5 +1,5 @@
-CC := gcc -std=c99 -pedantic
-CFLAGS := -Wall -Werror
+CC := clang -std=c99 -pedantic
+CFLAGS := -Wall -Werror -D_XOPEN_SOURCE=700
 LDFLAGS :=
 
 ifdef DEBUG

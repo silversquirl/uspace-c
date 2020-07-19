@@ -35,7 +35,7 @@ static int do_cmp(const char *file1, const char *file2) {
 
 	size_t byten = 0, linen = 1;
 	bool identical = true;
-	int c1, c2;
+	int c1 = 0, c2 = 0;
 
 #define get1char(n) if ((c##n = fgetc(f##n)) == EOF && ferror(f##n)) error("fgetc: %s", file##n)
 
