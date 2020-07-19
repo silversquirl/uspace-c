@@ -1,3 +1,5 @@
+// vim: noet
+
 #ifndef _USPACE_UTILS_H
 #define _USPACE_UTILS_H
 

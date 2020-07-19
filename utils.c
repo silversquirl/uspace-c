@@ -1,3 +1,5 @@
+// vim: noet
+
 #include "utils.h"
 #include <errno.h>
 #include <string.h>

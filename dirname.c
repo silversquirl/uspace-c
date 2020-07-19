@@ -1,3 +1,5 @@
+// vim: noet
+
 #include "utils.h"
 #include <string.h>
 #include <stdbool.h>
