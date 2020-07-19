@@ -58,7 +58,10 @@ int main(int argc, char **argv) {
   {
     char *path_env = getenv("PATH");
     // We don't need to copy this time as we never getenv again
-    if (path_env) path = path_env;
+    if (path_env) {
+      free(path);
+      path = path_env;
+    }
   }
 
   if (!argc) {
