@@ -34,6 +34,7 @@ int asprintf(char **strp, const char *fmt, ...) {
 	va_start(args, fmt);
 
 	size_t sz = strlen(fmt) * 2;
+	if (sz == 0) sz = 1;
 	for (;;) {
 		char *str = malloc(sz);
 		va_list tmp;
