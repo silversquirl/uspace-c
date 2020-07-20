@@ -397,7 +397,9 @@ void output_files(struct file_info *files, size_t nfiles) {
 
 		if (out_only_printable) {
 			for (char *c = line; *c; ++c) {
-				if (*c < 0x20 || *c > 0x7E) *c = '?';
+				if (*c < 0x20 || *c > 0x7E) {
+					if (*c != '\033' || !out_color) *c = '?';
+				}
 			}
 		}
 
