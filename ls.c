@@ -46,6 +46,7 @@ struct file_info {
 bool out_serial = false;
 bool out_only_printable = false;
 bool out_blocks = false;
+bool out_color = false;
 bool sort_reverse = false;
 size_t block_size = 512;
 int long_output_flags = 0;
@@ -225,6 +226,20 @@ struct file_info get_file_info(const char *path, char *name, struct stat f_stat)
 
 // Listing output {{{
 
+// Like strlen, but skips over ANSI escape codes for color output.
+size_t strlen_nocolor(const char *str) {
+	size_t len = 0;
+	while (*str) {
+		if (str[0] == '\033' && str[1] == '[') {
+			while (*str != 'm') ++str;
+			++str;
+			continue;
+		}
+		++len, ++str;
+	}
+	return len;
+}
+
 // Formatting info {{{
 struct {
 	struct {
@@ -262,9 +277,26 @@ void init_format_info(struct file_info *files, size_t nfiles) {
 }
 // }}}
 
+void add_color(mode_t mode, char **str) {
+	const char *color = NULL;
+
+	if (S_ISDIR(mode)) color = "01;38;5;27";
+	else if (S_ISLNK(mode)) color = "01;38;5;51";
+	else if (mode & S_IXUSR) color = "01;38;5;34";
+
+	if (color) {
+		char *tmp;
+		asprintf(&tmp, "\033[%sm%s\033[0m", color, *str);
+		free(*str);
+		*str = tmp;
+	}
+}
+
 char *format_file(struct file_info file) {
 	char *fmt = malloc(strlen(file.name) + 1);
 	strcpy(fmt, file.name);
+
+	if (out_color) add_color(file.mode, &fmt);
 
 	// Classifier symbols {{{
 	if (classify_mode != CLASSIFY_MODE_NONE) {
@@ -369,7 +401,7 @@ void output_files(struct file_info *files, size_t nfiles) {
 			}
 		}
 
-		size_t len = strlen(line);
+		size_t len = strlen_nocolor(line);
 		if (len > longest) longest = len;
 
 		lines[i] = line;
@@ -394,7 +426,9 @@ void output_files(struct file_info *files, size_t nfiles) {
 		for (unsigned r = 0; r < rows; ++r) {
 			for (unsigned c = 0; c < cols; ++c) {
 				if (c*rows + r >= nfiles) break;
-				printf("%-*s  ", longest, lines[c*rows + r]);
+				char *line = lines[c*rows + r];
+				unsigned padding = longest - strlen_nocolor(line);
+				printf("%s%*s  ", line, padding, "");
 			}
 			printf("\n");
 		}
@@ -404,7 +438,9 @@ void output_files(struct file_info *files, size_t nfiles) {
 		for (unsigned r = 0; r < rows; ++r) {
 			for (unsigned c = 0; c < cols; ++c) {
 				if (r*cols + c >= nfiles) break;
-				printf("%-*s  ", longest, lines[r*cols + c]);
+				char *line = lines[r*cols + c];
+				unsigned padding = longest - strlen_nocolor(line);
+				printf("%s%*s  ", line, padding, "");
 			}
 			printf("\n");
 		}
@@ -733,6 +769,8 @@ int main(int argc, char **argv) {
 			output_width = ws.ws_col;
 		}
 	}
+
+	if (isatty(STDOUT_FILENO)) out_color = true;
 
 	clock_gettime(CLOCK_REALTIME, &ts_now);
 	
