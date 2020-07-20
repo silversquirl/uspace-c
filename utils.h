@@ -13,4 +13,8 @@ void print_usage(const char *argv0);
 // Finds the last character that is not c
 char *strrxchr(const char *s, int c);
 
+int asprintf(char **strp, const char *fmt, ...);
+
+unsigned long log10li(unsigned long x);
+
 #endif
