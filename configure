@@ -108,7 +108,7 @@ done
 	[ "$#" -gt 0 ] && echo
 	for f; do
 		deps_list="$(deps "$f")" || exit
-		echo "$f:$deps_list"
+		echo "$BUILDDIR/obj/${f%.c}.o:$deps_list"
 	done
 } >config.mk
 
