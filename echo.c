@@ -1,6 +1,6 @@
 // vim: noet
 
-#include "utils.h"
+#include "lib/utils.h"
 #include <stdio.h>
 
 const char *usage[] = {

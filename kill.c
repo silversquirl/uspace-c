@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "utils.h"
+#include "lib/utils.h"
 
 const char *usage[] = {
 	"-s signal_name pid...",

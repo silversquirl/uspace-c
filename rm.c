@@ -1,6 +1,6 @@
 // vim: noet
 
-#include "utils.h"
+#include "lib/utils.h"
 #include <dirent.h>
 #include <errno.h>
 #include <stdbool.h>
