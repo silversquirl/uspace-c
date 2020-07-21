@@ -7,6 +7,7 @@
 #include <grp.h>
 #include <pwd.h>
 #include <errno.h>
+#include <string.h>
 
 const char *usage[] = {
 	"[user]",
@@ -20,6 +21,27 @@ const char *optstring = "Ggnru";
 
 char *argv0;
 bool had_err = false;
+
+void user_group_list(const char *user, int *ngroups, gid_t **groups) {
+	size_t alloc = 4;
+	*ngroups = 0;
+	*groups = malloc(alloc * sizeof **groups);
+
+	struct group *gr;
+
+	setgrent();
+	while ((gr = getgrent())) {
+		size_t i;
+		for (i = 0; gr->gr_mem[i] && strcmp(user, gr->gr_mem[i]); ++i);
+		if (!gr->gr_mem[i]) continue;
+		if (alloc == *ngroups) {
+			alloc *= 2;
+			*groups = realloc(*groups, alloc * sizeof **groups);
+		}
+		(*groups)[(*ngroups)++] = gr->gr_gid;
+	}
+	endgrent();
+}
 
 const char *uid_name(uid_t uid) {
 	errno = 0;
@@ -132,9 +154,7 @@ int main(int argc, char **argv) {
 		euid = uid = pass->pw_uid;
 		egid = gid = pass->pw_gid;
 
-		getgrouplist(user, egid, NULL, &ngroups);
-		groups = malloc(ngroups * sizeof groups[0]);
-		getgrouplist(user, egid, groups, &ngroups);
+		user_group_list(user, &ngroups, &groups);
 
 		output_groups = true;
 	}
