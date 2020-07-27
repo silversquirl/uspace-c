@@ -85,6 +85,13 @@ esac
 wspc='[
 	 ]'
 
+if [ -n "$PKGS" ]; then
+	set -f
+	CFLAGS="$CFLAGS $(pkg-config --cflags $PKGS)"
+	LDFLAGS="$LDFLAGS $(pkg-config --libs $PKGS)"
+	set +f
+fi
+
 BUILDDIR="${BUILDDIR:-.}"
 
 set -- $SRC
