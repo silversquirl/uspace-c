@@ -144,7 +144,7 @@ include config.mk
 clean:
 	rm -rf ${BUILDDIR}
 
-${BUILDDIR}/bin/%: ${BUILDDIR}/obj/%.o
+${TARGETS}: ${OBJ}
 	@mkdir -p $$(dirname $@)
 	${CC} -o $@ $^ ${LDFLAGS}
 
