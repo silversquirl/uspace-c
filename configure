@@ -124,4 +124,30 @@ done
 	done
 } >config.mk
 
+if ! [ -e Makefile ]; then
+	printf 'Makefile not found; create one? [Y/n] '
+	read -r ans
+	case "$ans" in
+		y*|Y*|'')
+			cat >Makefile <<'EOF'
+.POSIX:
+include config.mk
+
+.PHONY: clean
+clean:
+	rm -rf ${BUILDDIR}
+
+${BUILDDIR}/bin/%: ${BUILDDIR}/obj/%.o
+	@mkdir -p $$(dirname $@)
+	${CC} -o $@ $^ ${LDFLAGS}
+
+${BUILDDIR}/obj/%.o: %.c config.mk
+	@mkdir -p $$(dirname $@)
+	${CC} ${CFLAGS} -c -o $@ $<
+EOF
+			;;
+		*) ;;
+	esac
+fi
+
 true
